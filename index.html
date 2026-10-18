@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<!-- Tells the browser this is a modern HTML5 page -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <!-- Makes the page scale properly on phones -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Per Ardua Ad Astra</title>
+
+  <!-- Link our CSS file (all the styling lives there) -->
+  <!-- Google Font for headings (optional: the page still works offline using Georgia) -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&display=swap">
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Chart.js: a free library that draws the pie and bar charts (needs internet) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+</head>
+<body>
+
+  <!-- ===== TOP BAR: title + theme controls ===== -->
+  <header class="topbar">
+    <div class="brand">
+      <!-- An Orthodox cross drawn with SVG lines: top bar, cross bar, and the slanted foot bar -->
+      <svg class="cross" viewBox="0 0 24 40" width="22" height="36" aria-hidden="true">
+        <g stroke="currentColor" stroke-width="2.4" stroke-linecap="round" fill="none">
+          <line x1="12" y1="2" x2="12" y2="38"/>
+          <line x1="9" y1="7" x2="15" y2="7"/>
+          <line x1="4" y1="14" x2="20" y2="14"/>
+          <line x1="8" y1="30" x2="16" y2="25"/>
+        </g>
+      </svg>
+      <h1>Per Ardua Ad Astra</h1>
+    </div>
+    <div class="controls">
+      <!-- Button that switches between light and dark mode -->
+      <button id="themeToggle" type="button">Dark mode</button>
+      <!-- A <label> linked to a hidden file picker: clicking the label opens your file browser -->
+      <label class="btn" for="bgInput">Upload background</label>
+      <input id="bgInput" type="file" accept="image/*" hidden>
+      <button id="bgReset" type="button">Default background</button>
+      <!-- JavaScript fills this with the accent colour buttons -->
+      <div id="swatches" aria-label="Accent colour"></div>
+    </div>
+  </header>
+
+  <!-- ===== STOIC QUOTE: the big feature at the top ===== -->
+  <section class="quote">
+    <blockquote id="quoteText"></blockquote>
+    <p id="quoteAuthor"></p>
+  </section>
+
+  <!-- ===== MAIN GRID: each <section> is one panel ===== -->
+  <main class="grid">
+
+    <!-- Timer panel -->
+    <section class="panel">
+      <h2>Study timer</h2>
+      <input id="subjectInput" type="text" placeholder="What are you studying?">
+      <label class="minutes">Minutes
+        <input id="minutesInput" type="number" min="1" max="240" value="25">
+      </label>
+      <!-- The big countdown numbers -->
+      <div id="timeDisplay" class="time">25:00</div>
+      <div class="row">
+        <button id="startBtn" type="button" class="primary">Start</button>
+        <button id="pauseBtn" type="button">Pause</button>
+        <button id="finishBtn" type="button">Finish and save</button>
+        <button id="resetBtn" type="button">Discard</button>
+      </div>
+    </section>
+
+    <!-- To-do list panel -->
+    <section class="panel">
+      <h2>To-do list</h2>
+      <!-- Pressing Enter in this form adds the task -->
+      <form id="todoForm" class="row">
+        <input id="todoInput" type="text" placeholder="Add a task" required>
+        <button type="submit" class="primary">Add</button>
+      </form>
+      <!-- JavaScript fills this list with your tasks -->
+      <ul id="todoList" class="checklist"></ul>
+    </section>
+
+    <!-- Habits panel -->
+    <section class="panel">
+      <h2>Daily habits</h2>
+      <form id="habitForm" class="row">
+        <input id="habitInput" type="text" placeholder="Add a habit (e.g. Morning prayer)" required>
+        <button type="submit" class="primary">Add</button>
+      </form>
+      <p class="empty">Tick a habit when you have done it today.</p>
+      <!-- JavaScript fills this list with your habits -->
+      <ul id="habitList" class="checklist"></ul>
+    </section>
+
+    <!-- Countdown (D-day) panel -->
+    <section class="panel">
+      <h2>Countdowns</h2>
+      <form id="countdownForm" class="row">
+        <input id="cdName" type="text" placeholder="What are you counting down to?" required>
+        <input id="cdDate" type="datetime-local" required>
+        <!-- Which unit the countdown is shown in (you can change it later too) -->
+        <select id="cdUnit">
+          <option value="seconds">seconds</option>
+          <option value="minutes">minutes</option>
+          <option value="hours">hours</option>
+          <option value="days" selected>days</option>
+          <option value="weeks">weeks</option>
+        </select>
+        <button type="submit" class="primary">Add</button>
+      </form>
+      <!-- JavaScript fills this list with your countdowns -->
+      <ul id="countdownList"></ul>
+    </section>
+
+    <!-- Pie chart panel -->
+    <section class="panel">
+      <h2>Time by subject</h2>
+      <p id="pieEmpty" class="empty">Finish a study session to see your subjects here.</p>
+      <div class="chartBox"><canvas id="pieChart"></canvas></div>
+    </section>
+
+    <!-- Bar chart panel -->
+    <section class="panel">
+      <h2>Study minutes and habits, last 7 days</h2>
+      <div class="chartBox"><canvas id="barChart"></canvas></div>
+    </section>
+
+  </main>
+
+  <!-- ===== FOOTER: delete progress button ===== -->
+  <footer>
+    <button id="resetDataBtn" type="button" class="danger">Delete my progress</button>
+  </footer>
+
+  <!-- Link our JavaScript file. It goes at the bottom so the HTML above exists before the script runs -->
+  <script src="script.js"></script>
+</body>
+</html>

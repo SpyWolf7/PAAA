@@ -1,0 +1,205 @@
+/* ===== 1. THEME COLOURS =====
+   CSS variables (--name) store colours once so we can reuse them everywhere.
+   Light mode = aged vellum (parchment). Dark mode = deep lapis blue, like a night icon. */
+:root {
+  --bg: #e8dfca;        /* page background */
+  --panel: #f3ecdb;     /* panel background */
+  --text: #2a1f1a;      /* main text (dark brown-black, like ink) */
+  --muted: #6f6253;     /* quieter text */
+  --line: #b9a46a;      /* gold-leaf style borders */
+  --accent: #9a6f1c;    /* accent colour, JavaScript changes this */
+  --veil: rgba(232, 223, 202, 0.72);  /* see-through layer that softens the background image */
+}
+
+/* When JavaScript sets data-theme="dark" on <html>, these values replace the ones above */
+:root[data-theme="dark"] {
+  --bg: #11172a;
+  --panel: #19213a;
+  --text: #ecdfbf;
+  --muted: #a3a08f;
+  --line: #6b5f35;
+  --veil: rgba(17, 23, 42, 0.78);
+  color-scheme: dark;  /* makes built-in date pickers and dropdowns dark too */
+}
+
+/* ===== 2. BASICS ===== */
+* { box-sizing: border-box; }  /* makes width calculations include padding and borders */
+
+body {
+  margin: 0;
+  background-color: var(--bg);   /* plain colour shown if the image fails to load */
+  /* Two layers: the veil sits on top of the image so text stays readable.
+     To use a file you saved instead, change the url to url("background.png") */
+  background-image: linear-gradient(var(--veil), var(--veil)),
+                    var(--bg-image, url("https://www.warhistoryonline.com/wp-content/uploads/sites/64/2023/08/jaws-title-57618.png"));
+  /* --bg-image is set by JavaScript when you upload your own picture; if it is not set, the url after the comma is used */
+  background-size: cover;        /* stretch the image to fill the screen */
+  background-position: center;
+  background-attachment: fixed;  /* the image stays still while you scroll */
+  color: var(--text);
+  font-family: Georgia, "Times New Roman", serif;
+  line-height: 1.5;
+  transition: background 0.2s, color 0.2s;  /* smooth fade when changing theme */
+}
+
+/* Headings use Cormorant Garamond (loaded in the HTML); Georgia is the backup if it fails to load */
+h1, h2, .quote blockquote {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-weight: 600;
+  margin: 0;
+}
+h1 { font-size: 1.7rem; letter-spacing: 0.04em; }
+h2 { font-size: 1.35rem; margin-bottom: 14px; }
+
+/* ===== 3. TOP BAR ===== */
+.topbar {
+  display: flex;                 /* puts children side by side */
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 14px 28px;
+  background: var(--panel);  /* solid bar so it stays readable over the image */
+  border-bottom: 1px solid var(--line);
+}
+.brand { display: flex; align-items: center; gap: 12px; }
+.cross { color: var(--accent); }   /* the cross takes the accent colour */
+.controls { display: flex; align-items: center; gap: 14px; }
+#swatches { display: flex; gap: 8px; }
+
+/* Round accent colour buttons (JavaScript sets each one's colour) */
+.swatch {
+  width: 24px; height: 24px;
+  padding: 0;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+}
+.swatch.active { border-color: var(--text); }
+
+/* ===== 4. THE QUOTE (framed like an icon, with an arched top) ===== */
+.quote {
+  max-width: 780px;
+  margin: 36px auto 32px;
+  padding: 64px 48px 36px;
+  text-align: center;
+  border: 1px solid var(--line);
+  /* Elliptical rounded top corners make the arch shape of an icon panel */
+  border-radius: 50% 50% 4px 4px / 90px 90px 4px 4px;
+  /* Inset shadows draw a second thin border inside the first: a double frame */
+  background: var(--panel);
+  box-shadow: inset 0 0 0 6px var(--panel), inset 0 0 0 7px var(--line);
+}
+.quote blockquote {
+  font-style: italic;
+  font-size: clamp(1.5rem, 3.4vw, 2.3rem);  /* grows with screen width, within limits */
+  line-height: 1.3;
+}
+.quote p { margin: 16px 0 0; color: var(--muted); }
+
+/* ===== 5. PANEL GRID ===== */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));  /* as many columns as fit */
+  gap: 20px;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px 32px;
+}
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  padding: 24px;
+  /* Same double-frame trick as the quote */
+  box-shadow: inset 0 0 0 4px var(--panel), inset 0 0 0 5px var(--line);
+}
+
+/* ===== 6. FORM ELEMENTS ===== */
+input[type="text"], input[type="number"], input[type="datetime-local"] {
+  width: 100%;
+  padding: 9px 11px;
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  font: inherit;
+}
+.minutes { display: flex; align-items: center; gap: 10px; margin-top: 10px; color: var(--muted); }
+.minutes input { width: 90px; }
+
+/* .btn lets the Upload background label look exactly like a button */
+button, .btn {
+  display: inline-block;
+  padding: 8px 14px;
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  font: inherit;
+  cursor: pointer;
+}
+button:hover, .btn:hover { border-color: var(--accent); }
+button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+/* Delete button: red on hover so it feels like a warning */
+button.danger:hover { border-color: #b03a3a; color: #b03a3a; }
+
+/* Visible outline when navigating with the keyboard */
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.row { display: flex; flex-wrap: wrap; gap: 8px; }
+
+/* ===== 7. TIMER ===== */
+.time {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 4rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;  /* every digit same width so numbers don't jiggle */
+  margin: 10px 0;
+}
+
+/* ===== 8. TO-DO LIST ===== */
+.checklist { list-style: none; padding: 0; margin: 14px 0 0; }
+.checklist li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line);
+}
+.checklist span { flex: 1; }
+.checklist li.done span { text-decoration: line-through; color: var(--muted); }
+.checklist input[type="checkbox"] { accent-color: var(--accent); }
+.checklist button { padding: 2px 8px; }
+
+/* ===== 9. CHARTS ===== */
+.chartBox { position: relative; height: 260px; }  /* Chart.js needs a box with a set height */
+.empty { color: var(--muted); margin: 0 0 8px; }
+
+/* ===== 10. COUNTDOWNS ===== */
+select {
+  padding: 8px;
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  font: inherit;
+}
+#countdownForm input[type="text"] { flex: 1 1 100%; }                       /* name box takes a full row */
+#countdownForm input[type="datetime-local"] { flex: 1 1 190px; width: auto; }
+#countdownList { list-style: none; padding: 0; margin: 14px 0 0; }
+#countdownList li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+}
+.cdNumber { font-family: "Cormorant Garamond", Georgia, serif; font-size: 2rem; font-weight: 600; line-height: 1.1; }
+.cdText, .cdDate { color: var(--muted); font-size: 0.95rem; }
+.cdControls { display: flex; flex-wrap: wrap; gap: 6px; justify-content: flex-end; }
+
+/* ===== 11. FOOTER ===== */
+footer { text-align: center; padding: 8px 24px 40px; }
